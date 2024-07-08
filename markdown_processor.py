@@ -10,11 +10,12 @@ bucket_name = ''  # 根据实际情况修改
 
 
 def upload_to_oss(file_path: str) -> str:
+    upload_file_path = file_path.replace(' ', '')
     # 创建Bucket对象并获取上传路径
     auth = oss2.Auth(access_key_id, access_key_secret)
     bucket = oss2.Bucket(auth, endpoint, bucket_name)
     # object_path = ''
-    object_path = 'img/' + os.path.basename(file_path)  # 若需要上传至特定文件夹则可以进行修改
+    object_path = 'img/' + os.path.basename(upload_file_path)  # 若需要上传至特定文件夹则可以进行修改
 
     # 将文件上传到OSS中，并返回链接地址
     with open(file_path, 'rb') as f:
@@ -57,7 +58,7 @@ def process_markdown_file(file_path: str, directory: str):
 
         # 获取本地图片路径并读取二进制数据
         image_path = os.path.join(directory,
-                                  link.replace('/', '\\').lstrip('!').lstrip('[').rstrip(']').replace(' ', ''))
+                                  link.replace('/', '\\').lstrip('!').lstrip('[').rstrip(']'))
 
         # 上传图片到云储存库并获取链接地址
         cloud_link = upload_to_oss(image_path)
